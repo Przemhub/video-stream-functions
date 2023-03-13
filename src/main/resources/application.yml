@@ -1,0 +1,7 @@
+micronaut:
+  application:
+    name: videoStreamMicro
+netty:
+  default:
+    allocator:
+      max-order: 3
