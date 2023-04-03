@@ -12,12 +12,10 @@ import java.io.InputStream;
 @Controller("/film")
 public class VideoController {
 
-    private final ResourceLoader resourceLoader;
     private final VideoService videoService;
 
 
-    public VideoController(ResourceLoader resourceLoader, VideoService videoService) {
-        this.resourceLoader = resourceLoader;
+    public VideoController(VideoService videoService) {
         this.videoService = videoService;
     }
 
