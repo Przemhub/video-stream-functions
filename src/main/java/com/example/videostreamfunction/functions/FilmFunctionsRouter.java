@@ -20,17 +20,13 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class FilmFunctionsRouter {
 
-//    @Autowired
     private final FilmFunctionHandlers handler;
     private final ResourceLoader resourceLoader;
     private final VideoRepository videoRepository;
 
-
-
-
     @Bean
     public RouterFunction<ServerResponse> getFilm() {
-        return RouterFunctions.route(RequestPredicates.GET("/film/.*"), handler.filmHandler());
+        return RouterFunctions.route(RequestPredicates.GET("/film/{videoName:.+}"), handler.filmHandler());
     }
 
     @Bean
@@ -43,13 +39,4 @@ public class FilmFunctionsRouter {
         return RouterFunctions.route(RequestPredicates.GET("/film"), handler.filmListHandler());
     }
 
-
-
-//    @Override
-//    public void service(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception {
-//
-//
-//            }
-//        }
-//    }
 }
