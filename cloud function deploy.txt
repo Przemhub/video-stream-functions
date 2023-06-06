@@ -1,0 +1,1 @@
+gcloud alpha functions deploy function-sample-gcp-background  --entry-point org.springframework.cloud.function.adapter.gcp.GcfJarLauncher --runtime java17 --trigger-topic  video-streaming-function --source target/deploy --memory 512MB --region europe-central2 --vpc-connector video-stream-functions --allow-unauthenticated

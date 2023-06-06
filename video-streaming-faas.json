@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "video-streaming-paas",
+  "private_key_id": "57d19338537519dea356e443137adaf0c16ccbe8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDINEMaOxCX5kq+\nOQpfrHOexFyLIROaOKyHhBKkeob5iXRZs60aKIxqhE490Oek1vtw7ECumN5QgrwF\nb0zvPUYuKY0OGyNXQO+cZSCvwL4TyGMZ7EsZa+n93I6WBfZg7FGZCuWhg2QYKQEI\nA09sfL8XgK5fnU/+wV9uzTGaa02Y+evV4ANk621wMlKAB1F1vQEuWhNA/5WYYBij\n65yMpD72+yBv/CRaOPeVsthkDCZWTKfG/RkhEF9H71VDaCjiBo0mrwutdQSmzhgh\n64PcEE6gMp41Zc+btQtZ95hxNLZeHjYHEg/xOsZC9MaOWBWcX4cyz3vHTkjxCPbP\nzhZmrIQrAgMBAAECggEAG2YTnN5iefdZWUkjI07Nj/fdlmjTbvK8odswVfQyzqnC\nE5ikYwUTmmw67PjPCt8lECI1A/AF1MzfgHrn84HWPfEPzdNm9cT8RdINNCBTow90\niJKvAG6lWkm59cwhGMieriwwmvcJVskdzAPv9a/o0wWYV5uG3B2Iuvg4BqMSvpGP\nfcJPk5W7Q0+h1VeYJYWG48DBTIo/c3o92Ebm5bv1d0P7d1cKVQWcNHIqd62NPXp3\nxjA1eH4KDKlT/Ltyw/CIB6Cd2qOiDmj1OXye+1qrHaYtXn70ONI1znNdP74HjSAe\nM1h5uWTqDcUSw5foVn3s0kLoEo2QpFN8CFtlmjAy8QKBgQDk+OKMJCpyWgUKEqod\nJU+/05t1I8sIevvoti6KpMLlO3Aznty575vgYhq6OzjuFKnr/xqypI3E27LNey3a\njfb6yQRETVsPfgTITHkstYfr9drdblkDkaJ7sJ8Ocgl2/LZitdzhtCyJ+VB2ozCB\nWMCY6qE/E1Kw4bwF+hDLU8bHuQKBgQDf1g9S8xSHoUTMS6STalMKkquFYzvNJODa\nUGsId/CO32/J3xDPp+WGkuNNSbv9ADIKHKgngENk4petbaYu8uSPBZgga+d5ZY2y\nSylQjs83ElDRDmXNKK/BvDUu4p5EOnRCw3HyN4AFzv1vnEzi8fPWKHLmxreZfXGF\nt+2z86YVAwKBgDBcaO0UjmqMnNfdzVROlyN6/DCnmLB32VDzea0K06c7AJ3GhfQ3\nqYKg9egzrfiLIMCZpvfoTZEwnflMdQjeRzX80wviEsOY6EWt8UICLW0nBk0Si3Z3\nggwB5/ZTG7Cn+5Wpt7dsKKQTpm0IVqxbJIKnu9rop+R4KRBSGs33KdrxAoGBAIPG\nC2N0A2QNhukWpx65+4U/74Ypc21EBrO/oCNuKMqTs8YOcmEtoKxnETXQ8MDzOoJF\neKE4m3RrCYxp/umoyPGCA5siqzUGmjKamQn56Pes6rMIXNo416+gU1b0xuO33fXo\nBc7o6Y+B2iW4yHLaqggr6+j8l93ewdRNAb1s9RttAoGBAIn3usjgIi3ntvH9DhUj\nNEvUZdapduQUiZMjTFv/a2kxv2DerXS70xLuUa5xFAM/PpE/gx+pu2VpdxxDCaNb\nEQCc+/WvVW2hm0H/FXNh/WRwvnqDfGunnJ518N1Jr5LTqMykZV5R+DHgEQ30qWTM\nqvNgjGo9qiPbETo9InNV1c5I\n-----END PRIVATE KEY-----\n",
+  "client_email": "video-streaming-app-account@video-streaming-paas.iam.gserviceaccount.com",
+  "client_id": "111019565409814867911",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/video-streaming-app-account%40video-streaming-paas.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

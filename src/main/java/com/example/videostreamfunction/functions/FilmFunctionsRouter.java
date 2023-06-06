@@ -1,28 +1,18 @@
 package com.example.videostreamfunction.functions;
 
-import com.example.videostreamfunction.dto.VideoPostDto;
-import com.example.videostreamfunction.entity.Video;
-import com.example.videostreamfunction.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.BodyExtractors;
-import org.springframework.web.reactive.function.server.*;
-import reactor.core.publisher.Mono;
-
-import java.net.URI;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 @RequiredArgsConstructor
 public class FilmFunctionsRouter {
 
     private final FilmFunctionHandlers handler;
-    private final ResourceLoader resourceLoader;
-    private final VideoRepository videoRepository;
 
     @Bean
     public RouterFunction<ServerResponse> getFilm() {
