@@ -1,0 +1,2 @@
+name: video-streaming-instance
+pass: dA1k2F8kC45DuoO5C

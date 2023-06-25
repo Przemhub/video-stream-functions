@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class VideoStreamFunctionApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(VideoStreamFunctionApplication.class, args);
+        SpringApplication.run(VideoStreamFunctionApplication.class);
     }
 
 }

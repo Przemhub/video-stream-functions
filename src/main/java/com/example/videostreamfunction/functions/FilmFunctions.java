@@ -4,19 +4,21 @@ import com.example.videostreamfunction.dto.VideoPostDto;
 import com.example.videostreamfunction.entity.Video;
 import com.example.videostreamfunction.repository.VideoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.codec.multipart.FormFieldPart;
-import org.springframework.http.codec.multipart.Part;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
@@ -25,53 +27,71 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-@RequiredArgsConstructor
 @Configuration
-public class FilmFunctionHandlers {
+@RequiredArgsConstructor
+public class FilmFunctions {
 
     private final VideoRepository videoRepository;
     private final Storage storage;
-
+    private static Logger logger = LoggerFactory.getLogger(FilmFunctions.class);
     private final String MP4_SUFFIX = ".mp4";
     private final String videoDirPath = "src/main/resources/videos";
     private static final String GCLOUD_BUCKET = "video-streaming-functions-bucket";
 
-    public HandlerFunction<ServerResponse> filmHandler() {
+
+//    @Bean
+//    RoutingFunction mySpecialRouter(FunctionCatalog functionCatalog, BeanFactory beanFactory, @Nullable MessageRoutingCallback routingCallback) {
+//        Map<String, String> propertiesMap = new HashMap<>();
+//        propertiesMap.put(FunctionProperties.PREFIX + ".routing-expression", "'reverse'");
+//        return new RoutingFunction(functionCatalog, propertiesMap, new BeanFactoryResolver(beanFactory), routingCallback);
+//    }
+    @Bean
+    public Function<HttpRequest, Mono<ServerResponse>> getFilm() {
+        logger.info("getFilm Function");
         return request -> ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(Objects.requireNonNull(filmResource(request.pathVariable("videoName"))), Resource.class);
+                .body(Objects.requireNonNull(filmResource(request.getUri())), Resource.class);
     }
 
-    public HandlerFunction<ServerResponse> filmListHandler() {
-        return request -> ServerResponse.ok()
-                .bodyValue(videoRepository.findAll());
-    }
-
-    public HandlerFunction<ServerResponse> postFilmHandler() {
-        return request -> request.multipartData().map(parts -> {
-
-            FilePart videoFilePart = (FilePart) parts.toSingleValueMap().get("video");
-            VideoPostDto videoPostDto = extractVideoPostDTO(parts);
+    @Bean
+    public Function<HttpRequest, ResponseEntity<Video>> postFilm() {
+        logger.info("postFilm Function");
+        return request ->
+        {
             try {
-                return saveVideoFile(videoPostDto, videoFilePart)
-                        .then(Mono.just(saveVideoEntity(videoPostDto)))
-                        .flatMap(savedVideo -> ServerResponse
-                                .created(URI.create("/" + savedVideo.getVideoName()))
-                                .bodyValue(savedVideo)
-                        );
+                Bucket bucket = storage.get(GCLOUD_BUCKET);
+                if (bucket == null) {
 
+                    throw new FileNotFoundException("Error in Cloud Storage - Bucket not found");
+
+                }
+                Map<String, HttpRequest.HttpPart> parts = request.getParts();
+                FilePart videoFilePart = (FilePart) parts.get("video");
+                VideoPostDto videoPostDto = extractVideoPostDTO(parts);
+                File videoFile = saveVideoFile(videoPostDto, videoFilePart);
+                bucket.create(videoPostDto.getVideoName() + MP4_SUFFIX, new FileInputStream(videoFile).readAllBytes());
+                Video savedVideo = saveVideoEntity(videoPostDto);
+                return ResponseEntity.created(URI.create("/" + savedVideo.getVideoName())).body(savedVideo);
             } catch (IOException e) {
                 e.printStackTrace();
-                return ServerResponse.badRequest().bodyValue(e.toString());
             }
-
-
-        }).flatMap(Function.identity());
+            return ResponseEntity.internalServerError().body(null);
+        };
 
     }
+
+    @Bean
+    public Function<String, ResponseEntity<List<Video>>> getFilmList() {
+        logger.info("getFilmList Function");
+        return request -> ResponseEntity.ok()
+                .body(videoRepository.findAll());
+    }
+
 
     private Video saveVideoEntity(VideoPostDto videoPostDto) {
         return videoRepository.save(
@@ -82,27 +102,22 @@ public class FilmFunctionHandlers {
         );
     }
 
-    private Mono<Void> saveVideoFile(VideoPostDto videoInfo, FilePart videoFilePart) throws IOException {
+    private File saveVideoFile(VideoPostDto videoInfo, FilePart videoFilePart) throws IOException {
         Bucket bucket = storage.get(GCLOUD_BUCKET);
         if (bucket == null) {
             throw new FileNotFoundException("Error in Cloud Storage - Bucket not found");
         }
         File videoFile = new File(videoInfo.getVideoName() + MP4_SUFFIX);
         if (videoFile.createNewFile()) {
-            return videoFilePart.transferTo(videoFile).doFinally(signalType -> {
-                try {
-                    Mono.just(bucket.create(videoInfo.getVideoName() + MP4_SUFFIX, new FileInputStream(videoFile).readAllBytes()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            videoFilePart.transferTo(videoFile).block();
+            return videoFile;
         } else {
             throw new FileNotFoundException("Issue with local video file creation");
         }
     }
 
-    private VideoPostDto extractVideoPostDTO(MultiValueMap<String, Part> parts) {
-        FormFieldPart videoNamePart = (FormFieldPart) parts.toSingleValueMap().get("videoInfo");
+    private VideoPostDto extractVideoPostDTO(Map<String, HttpRequest.HttpPart> parts) {
+        FormFieldPart videoNamePart = (FormFieldPart) parts.get("videoInfo");
         String videoName = videoNamePart.value();
         try {
             return new ObjectMapper().readValue(videoName, VideoPostDto.class);
